@@ -1,0 +1,28 @@
+name: Quality assurance
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Prepare virtual environment
+      run: |
+        python -m venv venv
+        ./venv/bin/pip install -r requirements.txt
+
+    - name: Lint
+      run: make lint
+
+    - name: Check package build
+      run: make build
+
+    - name: Test
+      run: make test
