@@ -6,6 +6,7 @@ from mr_star_ble.commands import (
     format_color_command,
     format_command,
     format_power_command,
+    format_reverse_command,
 )
 
 
@@ -55,3 +56,10 @@ def test_format_color_command():
         0xBC, 0x04, 0x06, 0x00, 0x78, 0x03, 0xE8, 0x00, 0x00, 0x55])
     assert format_color_command((240, 100)) == bytes([
         0xBC, 0x04, 0x06, 0x00, 0xF0, 0x03, 0xE8, 0x00, 0x00, 0x55])
+
+def test_format_reverse_command():
+    """Test reverse command formatting"""
+    assert format_reverse_command(True) == bytes([
+        0xBC, 0x07, 0x01, 0x01, 0x55])
+    assert format_reverse_command(False) == bytes([
+        0xBC, 0x07, 0x01, 0x00, 0x55])

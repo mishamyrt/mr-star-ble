@@ -9,6 +9,7 @@ from .commands import (
     format_color_command,
     format_command,
     format_power_command,
+    format_reverse_command,
 )
 
 # Device UUIDs
@@ -40,6 +41,10 @@ class MrStarLight:
     async def set_power(self, is_on: bool):
         """Sets the power state of the device."""
         await self.write(format_power_command(is_on))
+
+    async def set_reverse(self, is_on: bool):
+        """Sets the power state of the device."""
+        await self.write(format_reverse_command(is_on))
 
     async def set_brightness(self, brightness: int):
         """Sets the brightness of the device."""
@@ -73,7 +78,7 @@ class MrStarLight:
             device_found.set()
 
         async with BleakScanner(callback, service_uuids=[LIGHT_SERVICE]) as _:
-            with await asyncio.timeout(timeout):
+            async with asyncio.timeout(timeout):
                 await device_found.wait()
 
         device = MrStarLight(address)

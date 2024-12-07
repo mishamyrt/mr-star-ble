@@ -9,6 +9,7 @@ COMMAND_SUFFIX = 0x55
 COMMAND_SET_POWER = 0x01
 COMMAND_SET_COLOR = 0x04
 COMMAND_SET_BRIGHTNESS = 0x05
+COMMAND_SET_REVERSE = 0x07
 
 UINT16_MAX = 65535
 
@@ -49,3 +50,7 @@ def format_color_command(color: HSColor) -> bytes:
     return format_command(COMMAND_SET_COLOR, bytes([
         hue_high, hue_low, sat_high, sat_low, 0x00, 0x00
     ]))
+
+def format_reverse_command(is_on: bool) -> bytes:
+    """Formats reverse command."""
+    return format_command(COMMAND_SET_REVERSE, [(1 if is_on else 0)])
