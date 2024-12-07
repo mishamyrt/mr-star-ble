@@ -1,5 +1,6 @@
 """MR Star light device commands."""
 from .color import HSColor
+from .effect import Effect
 
 # Command parts
 COMMAND_PREFIX = 0xBC
@@ -9,6 +10,7 @@ COMMAND_SUFFIX = 0x55
 COMMAND_SET_POWER = 0x01
 COMMAND_SET_COLOR = 0x04
 COMMAND_SET_BRIGHTNESS = 0x05
+COMMAND_SET_EFFECT = 0x06
 COMMAND_SET_REVERSE = 0x07
 COMMAND_SET_SPEED = 0x08
 
@@ -62,3 +64,8 @@ def format_speed_command(speed: float) -> bytes:
         raise ValueError("Speed must be between 0 and 1")
     speed_value = int(100 * speed)
     return format_command(COMMAND_SET_SPEED, [speed_value])
+
+def format_effect_command(effect: Effect) -> bytes:
+    """Formats effect command."""
+    effect_low, effect_high = _split_uint16(effect.value)
+    return format_command(COMMAND_SET_EFFECT, [effect_high, effect_low])

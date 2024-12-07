@@ -8,10 +8,12 @@ from .commands import (
     format_brightness_command,
     format_color_command,
     format_command,
+    format_effect_command,
     format_power_command,
     format_reverse_command,
     format_speed_command,
 )
+from .effect import Effect
 
 # Device UUIDs
 LIGHT_CHARACTERISTIC = "0000fff3-0000-1000-8000-00805f9b34fb"
@@ -42,6 +44,10 @@ class MrStarLight:
     async def set_power(self, is_on: bool):
         """Sets the power state of the device."""
         await self.write(format_power_command(is_on))
+
+    async def set_effect(self, effect: Effect):
+        """Sets the effect of the device."""
+        await self.write(format_effect_command(effect))
 
     async def set_reverse(self, is_on: bool):
         """Sets the power state of the device."""

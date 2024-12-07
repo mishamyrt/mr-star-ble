@@ -5,10 +5,12 @@ from mr_star_ble.commands import (
     format_brightness_command,
     format_color_command,
     format_command,
+    format_effect_command,
     format_power_command,
     format_reverse_command,
     format_speed_command,
 )
+from mr_star_ble.effect import Effect
 
 
 def test_format_command():
@@ -83,3 +85,12 @@ def test_format_speed_command():
         pytest.fail(Exception("Expected ValueError"))
     except ValueError:
         assert True
+
+def test_format_effect_command():
+    """Test effect command formatting"""
+    assert format_effect_command(Effect.AUTOMATIC_LOOP) == bytes([
+        0xBC, 0x06, 0x02, 0x00, 0x01, 0x55])
+    assert format_effect_command(Effect.SYMPHONY) == bytes([
+        0xBC, 0x06, 0x02, 0x00, 0x02, 0x55])
+    assert format_effect_command(Effect.PURPLE_OPEN_CLOSE) == bytes([
+        0xBC, 0x06, 0x02, 0x00, 0x2B, 0x55])
