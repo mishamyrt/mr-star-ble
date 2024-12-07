@@ -8,6 +8,7 @@ COMMAND_SUFFIX = 0x55
 
 # Light commands
 COMMAND_SET_POWER = 0x01
+COMMAND_SET_LENGTH = 0x03
 COMMAND_SET_COLOR = 0x04
 COMMAND_SET_BRIGHTNESS = 0x05
 COMMAND_SET_EFFECT = 0x06
@@ -69,3 +70,10 @@ def format_effect_command(effect: Effect) -> bytes:
     """Formats effect command."""
     effect_low, effect_high = _split_uint16(effect.value)
     return format_command(COMMAND_SET_EFFECT, [effect_high, effect_low])
+
+def format_length_command(led_count: int) -> bytes:
+    """Formats length command."""
+    if led_count < 8 or led_count > 300:
+        raise ValueError("LED count must be between 8 and 300")
+    count_low, count_high = _split_uint16(led_count)
+    return format_command(COMMAND_SET_LENGTH, [count_high, count_low])

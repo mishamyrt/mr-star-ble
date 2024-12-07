@@ -9,6 +9,7 @@ from .commands import (
     format_color_command,
     format_command,
     format_effect_command,
+    format_length_command,
     format_power_command,
     format_reverse_command,
     format_speed_command,
@@ -44,6 +45,10 @@ class MrStarLight:
     async def set_power(self, is_on: bool):
         """Sets the power state of the device."""
         await self.write(format_power_command(is_on))
+
+    async def set_length(self, length: int):
+        """Sets the power state of the device."""
+        await self.write(format_length_command(length))
 
     async def set_effect(self, effect: Effect):
         """Sets the effect of the device."""

@@ -52,7 +52,7 @@ class Effect(Enum):
     GB_RUNNING_WATER = 59
     YB_RUNNING_WATER = 60
     YC_RUNNING_WATER = 61
-    BP_RUNNING_WATER = 62
+    GP_RUNNING_WATER = 62
     # BW_RUNNING_WATER = 63
     # Trailing
     RAINBOW_TRAILING = 76

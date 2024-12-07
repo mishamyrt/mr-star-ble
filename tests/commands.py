@@ -6,6 +6,7 @@ from mr_star_ble.commands import (
     format_color_command,
     format_command,
     format_effect_command,
+    format_length_command,
     format_power_command,
     format_reverse_command,
     format_speed_command,
@@ -94,3 +95,22 @@ def test_format_effect_command():
         0xBC, 0x06, 0x02, 0x00, 0x02, 0x55])
     assert format_effect_command(Effect.PURPLE_OPEN_CLOSE) == bytes([
         0xBC, 0x06, 0x02, 0x00, 0x2B, 0x55])
+
+def test_format_length_command():
+    """Test length command formatting"""
+    assert format_length_command(8) == bytes([
+        0xBC, 0x03, 0x02, 0x00, 0x08, 0x55])
+    assert format_length_command(255) == bytes([
+        0xBC, 0x03, 0x02, 0x00, 0xFF, 0x55])
+    assert format_length_command(300) == bytes([
+        0xBC, 0x03, 0x02, 0x01, 0x2C, 0x55])
+    try:
+        format_length_command(7)
+        pytest.fail(Exception("Expected ValueError"))
+    except ValueError:
+        assert True
+    try:
+        format_length_command(301)
+        pytest.fail(Exception("Expected ValueError"))
+    except ValueError:
+        assert True
