@@ -7,6 +7,7 @@ from mr_star_ble.commands import (
     format_command,
     format_power_command,
     format_reverse_command,
+    format_speed_command,
 )
 
 
@@ -63,3 +64,22 @@ def test_format_reverse_command():
         0xBC, 0x07, 0x01, 0x01, 0x55])
     assert format_reverse_command(False) == bytes([
         0xBC, 0x07, 0x01, 0x00, 0x55])
+
+def test_format_speed_command():
+    """Test speed command formatting"""
+    assert format_speed_command(0.01) == bytes([
+        0xBC, 0x08, 0x01, 0x01, 0x55])
+    assert format_speed_command(0.5) == bytes([
+        0xBC, 0x08, 0x01, 0x32, 0x55])
+    assert format_speed_command(1) == bytes([
+        0xBC, 0x08, 0x01, 0x64, 0x55])
+    try:
+        format_speed_command(2)
+        pytest.fail(Exception("Expected ValueError"))
+    except ValueError:
+        assert True
+    try:
+        format_speed_command(-1)
+        pytest.fail(Exception("Expected ValueError"))
+    except ValueError:
+        assert True

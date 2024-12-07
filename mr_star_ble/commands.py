@@ -10,6 +10,7 @@ COMMAND_SET_POWER = 0x01
 COMMAND_SET_COLOR = 0x04
 COMMAND_SET_BRIGHTNESS = 0x05
 COMMAND_SET_REVERSE = 0x07
+COMMAND_SET_SPEED = 0x08
 
 UINT16_MAX = 65535
 
@@ -54,3 +55,10 @@ def format_color_command(color: HSColor) -> bytes:
 def format_reverse_command(is_on: bool) -> bytes:
     """Formats reverse command."""
     return format_command(COMMAND_SET_REVERSE, [(1 if is_on else 0)])
+
+def format_speed_command(speed: float) -> bytes:
+    """Formats speed command."""
+    if speed < 0 or speed > 1:
+        raise ValueError("Speed must be between 0 and 1")
+    speed_value = int(100 * speed)
+    return format_command(COMMAND_SET_SPEED, [speed_value])
