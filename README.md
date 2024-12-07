@@ -1,4 +1,4 @@
-# MR Star BLE
+# MR Star BLE [![Quality assurance](https://github.com/mishamyrt/mr-star-ble/actions/workflows/qa.yaml/badge.svg)](https://github.com/mishamyrt/mr-star-ble/actions/workflows/qa.yaml)
 
 This library allows you to control BLE devices supported by MR Star application via Python.
 
