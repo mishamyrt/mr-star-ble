@@ -104,12 +104,12 @@ class MrStarLight:
         device_found = asyncio.Event()
         address = None
 
-        def callback(device, _):
+        def handle_discovery(device, _):
             nonlocal address
             address = device.address
             device_found.set()
 
-        async with BleakScanner(callback, service_uuids=[LIGHT_SERVICE]) as _:
+        async with BleakScanner(handle_discovery, service_uuids=[LIGHT_SERVICE]) as _:
             async with asyncio.timeout(timeout):
                 await device_found.wait()
 
