@@ -1,6 +1,6 @@
 VENV_PATH = ./venv
 VENV = . $(VENV_PATH)/bin/activate;
-VERSION = 0.0.2
+VERSION = 0.1.0
 
 .PHONY: clean
 clean:
@@ -14,6 +14,10 @@ clean:
 .PHONY: test
 test:
 	$(VENV) pytest -vv tests/*.py
+
+.phony: e2e
+e2e:
+	$(VENV) pytest tests/e2e/*.py
 
 .PHONY: build
 build:
