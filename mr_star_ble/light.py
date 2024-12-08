@@ -1,5 +1,6 @@
 """MR Star light device."""
 import asyncio
+from contextlib import AsyncExitStack
 
 from bleak import BleakClient, BleakScanner
 
@@ -21,26 +22,39 @@ LIGHT_CHARACTERISTIC = "0000fff3-0000-1000-8000-00805f9b34fb"
 LIGHT_SERVICE = "00002022-0000-1000-8000-00805f9b34fb"
 
 class MrStarLight:
-    """Represents a MR Star light device."""
-    address: str
-    client: BleakClient
+    """Represents a MR Star LED strip."""
+    _address: str
+    _client: BleakClient
+    _client_stack: AsyncExitStack
+    _lock: asyncio.Lock
 
-    def __init__(self, address):
-        self.address = address
+    def __init__(self, address: str):
+        self._address = address
+        self._client_stack = AsyncExitStack()
+        self._lock = asyncio.Lock()
+        self._client = None
 
     @property
-    def is_connected(self):
-        """Check connection status between this client and the GATT server."""
-        return self.client.is_connected
+    def address(self) -> str:
+        """The address (uuid or mac) of the device."""
+        return self._address
 
-    async def connect(self):
+    @property
+    def is_connected(self) -> bool:
+        """Check connection status between this client and the GATT server."""
+        return self._client is not None and self._client.is_connected
+
+    async def connect(self, timeout=10):
         """Connects to the device."""
-        self.client = BleakClient(self.address)
-        await self.client.connect()
+        if self.is_connected:
+            return
+        async with self._lock:
+            self._client = await self._client_stack.enter_async_context(
+            BleakClient(self._address, timeout=timeout))
 
     async def disconnect(self):
         """Disconnects from the device."""
-        await self.client.disconnect()
+        await self._client.disconnect()
 
     async def set_power(self, is_on: bool):
         """Sets the power state of the device."""
@@ -80,7 +94,9 @@ class MrStarLight:
 
     async def write(self, payload: bytes):
         """Writes a raw payload to the device."""
-        await self.client.write_gatt_char(LIGHT_CHARACTERISTIC, payload)
+        if not self.is_connected:
+            raise RuntimeError("Device is not connected")
+        await self._client.write_gatt_char(LIGHT_CHARACTERISTIC, payload)
 
     @staticmethod
     async def discover(timeout=10):
