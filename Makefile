@@ -1,6 +1,6 @@
 VENV_PATH = ./venv
 VENV = . $(VENV_PATH)/bin/activate;
-VERSION = 0.1.0
+VERSION = 0.1.1
 
 .PHONY: clean
 clean:
