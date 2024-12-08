@@ -2,7 +2,7 @@
 import asyncio
 from contextlib import AsyncExitStack
 
-from bleak import BleakClient, BleakScanner
+from bleak import BleakClient, BleakScanner, BLEDevice
 
 from .color import HSColor, RGBColor, rgb_to_hs
 from .commands import (
@@ -23,13 +23,13 @@ LIGHT_SERVICE = "00002022-0000-1000-8000-00805f9b34fb"
 
 class MrStarLight:
     """Represents a MR Star LED strip."""
-    _address: str
+    _address_or_ble_device: BLEDevice | str
     _client: BleakClient
     _client_stack: AsyncExitStack
     _lock: asyncio.Lock
 
-    def __init__(self, address: str):
-        self._address = address
+    def __init__(self, address_or_ble_device: BLEDevice | str):
+        self._address_or_ble_device = address_or_ble_device
         self._client_stack = AsyncExitStack()
         self._lock = asyncio.Lock()
         self._client = None
@@ -37,7 +37,9 @@ class MrStarLight:
     @property
     def address(self) -> str:
         """The address (uuid or mac) of the device."""
-        return self._address
+        if isinstance(self._address_or_ble_device, BLEDevice):
+            return self._address_or_ble_device.address
+        return self._address_or_ble_device
 
     @property
     def is_connected(self) -> bool:
@@ -50,7 +52,7 @@ class MrStarLight:
             return
         async with self._lock:
             self._client = await self._client_stack.enter_async_context(
-            BleakClient(self._address, timeout=timeout))
+            BleakClient(self._address_or_ble_device, timeout=timeout))
 
     async def disconnect(self):
         """Disconnects from the device."""
