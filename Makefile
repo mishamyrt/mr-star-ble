@@ -30,6 +30,9 @@ lint:
 	$(VENV) pylint ./mr_star_ble
 	$(VENV) ruff check ./mr_star_ble
 
+.PHONY: qa
+qa: lint test
+
 .PHONY: publish
 publish:
 	$(MAKE) clean
