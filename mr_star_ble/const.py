@@ -1,6 +1,23 @@
-"""MR Star light device effects."""
+"""MR Star light device constants."""
 from enum import Enum
 
+# Device UUIDs
+LIGHT_CHARACTERISTIC = "0000fff3-0000-1000-8000-00805f9b34fb"
+LIGHT_SERVICE = "00002022-0000-1000-8000-00805f9b34fb"
+
+# Command parts
+COMMAND_PREFIX = 0xBC
+COMMAND_SUFFIX = 0x55
+
+class Command(Enum):
+    """MR Star light device commands."""
+    SET_POWER = 0x01
+    SET_LENGTH = 0x03
+    SET_COLOR = 0x04
+    SET_BRIGHTNESS = 0x05
+    SET_EFFECT = 0x06
+    SET_REVERSE = 0x07
+    SET_SPEED = 0x08
 
 class Effect(Enum):
     """MR Star light device effects."""

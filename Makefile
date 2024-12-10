@@ -1,4 +1,5 @@
 VENV_PATH = ./venv
+PYTHON = python3.12
 VENV = . $(VENV_PATH)/bin/activate;
 VERSION = 0.2.0
 
@@ -13,7 +14,7 @@ clean:
 
 .PHONY: test
 test:
-	$(VENV) pytest -vv tests/*.py
+	$(VENV) pytest -o log_cli=true -vv tests/*.py
 
 .phony: e2e
 e2e:
@@ -48,5 +49,5 @@ configure:
 	make $(VENV_PATH)
 
 $(VENV_PATH):
-	python3.11 -m venv $(VENV_PATH)
+	$(PYTHON) -m venv $(VENV_PATH)
 	$(VENV) pip install -r requirements.txt

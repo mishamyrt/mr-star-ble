@@ -11,15 +11,15 @@ from mr_star_ble.commands import (
     format_reverse_command,
     format_speed_command,
 )
-from mr_star_ble.effect import Effect
+from mr_star_ble.const import Command, Effect
 
 
 def test_format_command():
     """Test base command formatting"""
-    assert format_command(0x01, [0x02, 0x03]) == bytes([
+    assert format_command(Command.SET_POWER, [0x02, 0x03]) == bytes([
         0xBC, 0x01, 0x02, 0x02, 0x03, 0x55])
     try:
-        format_command(1, [])
+        format_command(Command.SET_POWER, [])
         pytest.fail(Exception("Expected ValueError"))
     except ValueError:
         assert True

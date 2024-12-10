@@ -1,3 +1,5 @@
 """MR Star BLE library."""
-from .effect import Effect
-from .light import LIGHT_SERVICE, MrStarLight
+from .const import Effect
+from .device import MrStarDevice
+from .discover import discover
+from .light import MrStarLight
