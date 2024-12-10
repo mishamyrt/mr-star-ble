@@ -14,6 +14,7 @@ class MrStarDevice:
     _client: BleakClient
     _ttl: int
     _lock: asyncio.Lock
+    _connection_timeout: float
     _stopping: asyncio.Event
     _stopped: asyncio.Event
     _connected: asyncio.Event
@@ -33,8 +34,10 @@ class MrStarDevice:
         """Check connection status between this client and the Mr Star device."""
         return self._client.is_connected
 
-    async def connect(self, await_connected: bool = True):
+    async def connect(self, await_connected: bool = True,
+                      connection_timeout: float = 20):
         """Start the keep alive task."""
+        self._connection_timeout = connection_timeout
         self._stopped.clear()
         asyncio.create_task(self._keep_alive())
         if await_connected:
@@ -62,7 +65,7 @@ class MrStarDevice:
                     await self._client.disconnect()
                     self._connected.clear()
                 try:
-                    await self._client.connect()
+                    await self._client.connect(timeout=self._connection_timeout)
                     self._connected.set()
                 except BleakDeviceNotFoundError:
                     _LOGGER.debug("Device %s not found", self._client.address)
