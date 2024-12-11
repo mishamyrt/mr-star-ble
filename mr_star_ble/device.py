@@ -34,6 +34,11 @@ class MrStarDevice:
         """Check connection status between this client and the Mr Star device."""
         return self._client.is_connected
 
+    @property
+    async def connected(self):
+        """Wait for connection status between this client and the Mr Star device."""
+        await self._connected.wait()
+
     async def connect(self, await_connected: bool = True,
                       connection_timeout: float = 20):
         """Start the keep alive task."""
