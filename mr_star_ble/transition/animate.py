@@ -1,6 +1,8 @@
 """MR Star light animation utils"""
 
 
+import asyncio
+
 from mr_star_ble.api import MrStarAPI
 from mr_star_ble.color import HSColor
 
@@ -26,11 +28,15 @@ async def animate_power(
     """Animates lights power off."""
     if is_on:
         await api.set_brightness(0)
+        await asyncio.sleep(0.05)
         await api.set_power(True)
+        await asyncio.sleep(0.05)
         await animate_brightness(api, 0, current_brightness, duration)
     else:
         await animate_brightness(api, current_brightness, 0, duration)
+        await asyncio.sleep(0.05)
         await api.set_power(False)
+        await asyncio.sleep(0.05)
         await api.set_brightness(current_brightness)
 
 async def animate_color(
