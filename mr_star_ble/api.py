@@ -16,8 +16,8 @@ from .commands import (
 from .const import LIGHT_CHARACTERISTIC, Effect
 
 
-class MrStarLight:
-    """Represents a MR Star LED strip."""
+class MrStarAPI:
+    """Represents a MR Star light device API."""
     _client: BleakClient
 
     def __init__(self, client: BleakClient):
@@ -48,7 +48,7 @@ class MrStarLight:
         """Sets the power state of the device."""
         await self.write(format_speed_command(speed))
 
-    async def set_brightness(self, brightness: int):
+    async def set_brightness(self, brightness: float):
         """Sets the brightness of the device."""
         await self.write(format_brightness_command(brightness))
 
@@ -68,4 +68,5 @@ class MrStarLight:
         """Writes a raw payload to the device."""
         if not self.is_connected:
             raise RuntimeError("Device is not connected")
-        await self._client.write_gatt_char(LIGHT_CHARACTERISTIC, payload)
+        await self._client.write_gatt_char(
+            LIGHT_CHARACTERISTIC, payload, response=False)
